@@ -1,7 +1,27 @@
+const bcrypt = require('bcryptjs')
 const router = require('express').Router();
+const jwt = require('jsonwebtoken')
+const User = require('../users/user-model')
 
-router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+const {
+  checkUsernameFree
+} = require('./auth-middleware')
+
+
+
+
+router.post('/register', (req, res, next) => {
+  const { username, password } = req.body
+  const hash = bcrypt.hashSync(password, 8)
+  User.add({ username, password: hash })
+    .then(saved => {
+      if (!saved.username || !saved.password) {
+        res.json({ message: "username and password required" })
+      } else {
+        res.status(201).json(saved)
+      }
+    })
+    .catch(next)
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -55,5 +75,16 @@ router.post('/login', (req, res) => {
       the response body should include a string exactly as follows: "invalid credentials".
   */
 });
+
+function buildToken(user) {
+  const payload = {
+    subject: user.id,
+    username: user.username,
+  }
+  const options = {
+    expiresIn: '1d',
+  }
+  return jwt.sign(payload, 'shhhh', options)
+}
 
 module.exports = router;
