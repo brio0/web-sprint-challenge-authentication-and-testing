@@ -15,17 +15,21 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
   const user = req.body
   const hash = bcrypt.hashSync(user.password, 8)
   user.password = hash
-  console.log(user)
+  res.json({ message: "username and password required" })
   User.add(user)
     .then(saved => {
-      console.log(saved.username)
-      if (!saved.username || !saved.password) {
+      if (!saved.username || !saved.password || saved.password.length < 3 || saved.username.length < 3) {
         res.json({ message: "username and password required" })
       } else {
         res.status(201).json(saved)
       }
+
     })
-    .catch(next)
+    .catch(err => {
+      console.log(err)
+    })
+
+
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
