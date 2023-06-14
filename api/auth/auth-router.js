@@ -14,9 +14,10 @@ const { JWT_SECRET } = require('../../config')
 router.post('/register', checkUsernameFree, (req, res, next) => {
   const { password, username } = req.body
   const user = req.body
+
   const hash = bcrypt.hashSync(password, 8)
   user.password = hash
-  if (!username || !password || password.length < 3 || username.length < 3) {
+  if (!username || !password || password.length === 0 || username.length === 0) {
     res.json({ message: "username and password required" })
   } else {
     User.add(user)
