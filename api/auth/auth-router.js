@@ -12,22 +12,31 @@ const { JWT_SECRET } = require('../../config')
 
 
 router.post('/register', checkUsernameFree, (req, res, next) => {
-  const user = req.body
-  const hash = bcrypt.hashSync(user.password, 8)
-  user.password = hash
-  res.json({ message: "username and password required" })
-  User.add(user)
-    .then(saved => {
-      if (!saved.username || !saved.password || saved.password.length < 3 || saved.username.length < 3) {
-        res.json({ message: "username and password required" })
-      } else {
+  const { password, username } = req.body
+  const hash = bcrypt.hashSync(password, 8)
+  req.body.password = hash
+  if (!username || !password || password.length < 3 || username.length < 3) {
+    res.json({ message: "username and password required" })
+  } else {
+    User.add({ username, password })
+      .then(saved => {
         res.status(201).json(saved)
-      }
+      })
+      .catch(next)
+  }
 
-    })
-    .catch(err => {
-      console.log(err)
-    })
+  // User.add(user)
+  //   .then(saved => {
+  //     if (!saved.username || !saved.password || saved.password.length < 3 || saved.username.length < 3) {
+  //       res.json({ message: "username and password required" })
+  //     } else {
+  //       res.status(201).json(saved)
+  //     }
+
+  //   })
+  //   .catch(err => {
+  //     console.log(err)
+  //   })
 
 
   /*
