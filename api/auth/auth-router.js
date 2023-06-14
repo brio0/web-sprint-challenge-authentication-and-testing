@@ -17,7 +17,7 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
 
   const hash = bcrypt.hashSync(password, 8)
   user.password = hash
-  if (!username || !password || password.length === 0 || username.length === 0) {
+  if (password.length === 0 || username.length === 0) {
     res.json({ message: "username and password required" })
   } else {
     User.add(user)
@@ -70,16 +70,21 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
 
 router.post('/login', checkUsernameExist, (req, res, next) => {
   const { username, password } = req.body
-  User.findBy({ username })
-    .then(([user]) => {
-      if (user && bcrypt.compareSync(password, user.password)) {
-        const token = buildToken(user)
-        res.status(200).json({ message: `welcome, ${user.username}`, token })
-      } else {
-        next({ status: 401, message: "invalid credentials" })
-      }
-    })
-    .catch(next)
+  if (username.length === 0 || password.length === 0) {
+    res.json({ message: "username and password required" })
+  } else {
+
+    User.findBy({ username })
+      .then(([user]) => {
+        if (user && bcrypt.compareSync(password, user.password)) {
+          const token = buildToken(user)
+          res.status(200).json({ message: `welcome, ${user.username}`, token })
+        } else {
+          next({ status: 401, message: "invalid credentials" })
+        }
+      })
+      .catch(next)
+  }
 
 
   // if (bcrypt.compareSync(password, req.user.password)) {
