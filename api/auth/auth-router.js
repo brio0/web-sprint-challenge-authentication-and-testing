@@ -17,7 +17,7 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
   const hash = bcrypt.hashSync(password, 8)
   user.password = hash
   console.log(!username)
-  if (password.trim().length === 0 || username.trim().length === 0 || !password || !username) {
+  if (!password || !username) {
     res.status(400).json({ message: "username and password required" })
   } else {
     User.add(user)
@@ -70,7 +70,6 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
   const { username, password } = req.body
-  console.log('f', username)
   if (!username || !password) {
     res.status(400).json({ message: "username and password required" })
   } else {
