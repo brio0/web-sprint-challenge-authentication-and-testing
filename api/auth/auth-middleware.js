@@ -19,8 +19,9 @@ async function checkUsernameFree(req, res, next) {
 
 async function checkUsernameExist(req, res, next) {
     try {
-        const users = await User.findByUsername({ username: req.body.username })
-        if (users) {
+        const users = await User.findBy({ username: req.body.username })
+        console.log(users)
+        if (users.length) {
             req.user = users[0]
             next()
         } else {
