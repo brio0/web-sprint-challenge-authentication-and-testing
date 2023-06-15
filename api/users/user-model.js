@@ -22,4 +22,5 @@ module.exports = {
     add,
     findById,
     findByUsername,
+    findBy
 }
