@@ -70,12 +70,12 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
   const { username, password } = req.body
-  const loginUser = { username: username, password: password }
-  if (!username || !password) {
+  console.log('f', req.body)
+  if (username.trim().length === 0 || password.trim().length === 0) {
     res.status(400).json({ message: "username and password required" })
   } else {
     checkUsernameExist
-    User.findBy(loginUser.username)
+    User.findBy({ username })
       .then(([user]) => {
         if (user && bcrypt.compareSync(password, user.password)) {
           const token = buildToken(user)
