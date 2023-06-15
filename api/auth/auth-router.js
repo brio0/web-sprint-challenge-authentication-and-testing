@@ -5,27 +5,24 @@ const User = require('../users/user-model')
 
 const {
   checkUsernameFree,
-  checkUsernameExist
+  checkUsernameExist,
+  checkUsernameAndPasswordProvided
 } = require('./auth-middleware')
 
 const { JWT_SECRET } = require('../../config')
 
 
-router.post('/register', (req, res, next) => {
-  const { password, username } = req.body
-  if (!username || !password) {
-    res.status(400).json({ message: "username and password required" })
-  } else {
-    checkUsernameFree
-    const user = req.body
-    const hash = bcrypt.hashSync(password, 8)
-    user.password = hash
-    User.add(user)
-      .then(saved => {
-        res.status(201).json(saved)
-      })
-      .catch(next)
-  }
+router.post('/register', checkUsernameAndPasswordProvided, checkUsernameFree, (req, res, next) => {
+  const { password } = req.body
+  const user = req.body
+  const hash = bcrypt.hashSync(password, 8)
+  user.password = hash
+  User.add(user)
+    .then(saved => {
+      res.status(201).json(saved)
+    })
+    .catch(next)
+
 
   // User.add(user)
   //   .then(saved => {
