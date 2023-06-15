@@ -2,7 +2,7 @@ const User = require('../users/user-model')
 
 async function checkUsernameFree(req, res, next) {
     try {
-        const username = await User.findBy(req.body.username)
+        const username = await User.findByUsername(req.body.username)
 
         if (!username) {
             return next()
