@@ -8,7 +8,7 @@ async function checkUsernameFree(req, res, next) {
             return next()
         }
         else {
-            return next({ message: "username taken", status: 401 })
+            return next({ "message": "username taken", status: 401 })
         }
     } catch (err) {
         next(err)
@@ -19,7 +19,7 @@ async function checkUsernameFree(req, res, next) {
 
 async function checkUsernameExist(req, res, next) {
     try {
-        const users = await User.findBy({ username: req.body.username })
+        const users = await User.findByUsername({ username: req.body.username })
         if (users.length) {
             req.user = users[0]
             next()
