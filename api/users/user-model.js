@@ -1,13 +1,13 @@
 const db = require('../../data/dbConfig')
 
 function find() {
-    return db('users').select('id', 'username', 'password')
+    return db('users').select('id', 'username',)
 }
 function findById(id) {
     return db('users').where('id', id).first()
 }
 function findBy(filter) {
-    return db('users').where(filter).first()
+    return db('users').where(filter)
 }
 function findByUsername(username) {
     return db('users').where('username', username).first()
