@@ -2,7 +2,7 @@ const User = require('../users/user-model')
 
 async function checkUsernameFree(req, res, next) {
     try {
-        const username = await User.findByUsername(req.body.username)
+        const username = await User.findBy(req.body.username)
 
         if (!username) {
             return next()
@@ -20,7 +20,7 @@ async function checkUsernameFree(req, res, next) {
 async function checkUsernameExist(req, res, next) {
     try {
         const users = await User.findBy({ username: req.body.username })
-        if (users) {
+        if (users.length) {
             req.user = users[0]
             next()
         } else {
