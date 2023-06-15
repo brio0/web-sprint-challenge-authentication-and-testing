@@ -70,7 +70,7 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
 
 router.post('/login', checkUsernameExist, (req, res, next) => {
   const { username, password } = req.body
-  if (username.trim().length === 0 || password.trim().length === 0) {
+  if (username.trim().length === 0 || password.trim().length === 0 || !username || !password) {
     res.status(400).json({ message: "username and password required" })
   } else {
     User.findBy({ username })
