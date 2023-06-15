@@ -50,7 +50,7 @@ describe('users model login', () => {
   })
   test('status 401 if invalid credentials entered', async () => {
     await User.add(user1)
-    let res = await request(server).post('/api/auth/login').send({ username: "jack" })
+    let res = await request(server).post('/api/auth/login').send({ username: "jack", password: 1234 })
     expect(res.status).toBe(401)
   })
 
